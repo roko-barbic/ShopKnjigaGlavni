@@ -7,19 +7,19 @@
 namespace ShopKnjigaGlavni.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCategoriesSeed : Migration
+    public partial class SeedProducts : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "Id", "DisplayOrder", "Name" },
+                table: "Products",
+                columns: new[] { "Id", "Author", "Description", "ISBN", "ListPrice", "Price", "Price100", "Price50", "Title" },
                 values: new object[,]
                 {
-                    { 1, 1, "SciFi" },
-                    { 2, 2, "Novel" },
-                    { 3, 3, "Thriller" }
+                    { 1, "Nez ko je", "Djecak koji zivi u snu", "aSDNJfjabaA", 15.0, 13.0, 7.0, 10.0, "Petar Pan" },
+                    { 2, "Rita Bullwinkel", "Zivot je borba", "agDNJfjfassaA", 18.0, 13.0, 10.0, 13.0, "Headshot" },
+                    { 3, "Tracy Sierra", "Gledanje mraka", "giasdbfajfaS", 20.0, 13.0, 7.0, 10.0, "Nightwatching" }
                 });
         }
 
@@ -27,17 +27,17 @@ namespace ShopKnjigaGlavni.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "Categories",
+                table: "Products",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "Categories",
+                table: "Products",
                 keyColumn: "Id",
                 keyValue: 2);
 
             migrationBuilder.DeleteData(
-                table: "Categories",
+                table: "Products",
                 keyColumn: "Id",
                 keyValue: 3);
         }
