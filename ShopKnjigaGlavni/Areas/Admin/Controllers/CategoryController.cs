@@ -3,7 +3,7 @@ using ShopKnjigaGlavni.DataAccess.Data;
 using ShopKnjigaGlavni.DataAccess.Repository.IRepository;
 using ShopKnjigaGlavni.Models.Models;
 
-namespace ShopKnjigaGlavni.Controllers
+namespace ShopKnjigaGlavni.Areas.Admin.Controllers
 {
     public class CategoryController : Controller
     {
@@ -17,7 +17,7 @@ namespace ShopKnjigaGlavni.Controllers
         //}
         public CategoryController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork; 
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
@@ -40,7 +40,7 @@ namespace ShopKnjigaGlavni.Controllers
                 {
                     ModelState.AddModelError("Name", "Name vec postoji");
                 }
-                if(item.DisplayOrder == category.DisplayOrder)
+                if (item.DisplayOrder == category.DisplayOrder)
                 {
                     ModelState.AddModelError("DisplayOrder", "Display order vec postoji");
                 }
@@ -54,19 +54,19 @@ namespace ShopKnjigaGlavni.Controllers
                 TempData["success"] = "Uspijeh";
                 return RedirectToAction("Index", "Category");
             }
-           
+
             return View();
         }
 
         public IActionResult Edit(int? categoryId)
         {
-            if(categoryId == null && categoryId == 0)
+            if (categoryId == null && categoryId == 0)
             {
                 return NotFound();
             }
             Category? category = _unitOfWork.Category.Get(c => c.Id == categoryId);
 
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -108,7 +108,7 @@ namespace ShopKnjigaGlavni.Controllers
         {
             Category? category = _unitOfWork.Category.Get(c => c.Id == categoryId);
 
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }

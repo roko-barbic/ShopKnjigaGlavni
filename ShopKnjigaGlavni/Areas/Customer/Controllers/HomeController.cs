@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShopKnjigaGlavni.Models.Models;
 using System.Diagnostics;
 
-namespace ShopKnjigaGlavni.Controllers
+namespace ShopKnjigaGlavni.Areas.Customer.Controllers
 {
     public class HomeController : Controller
     {
