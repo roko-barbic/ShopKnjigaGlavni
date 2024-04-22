@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ShopKnjigaGlavni.DataAccess\ShopKnjigaGlavni.DataAccess.csproj" />
     <ProjectReference Include="..\ShopKnjigaGlavni.Models\ShopKnjigaGlavni.Models.csproj" />
+    <ProjectReference Include="..\ShopKnjigaGlavni.Utility\ShopKnjigaGlavni.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>

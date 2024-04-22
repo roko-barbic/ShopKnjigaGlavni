@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopKnjigaGlavni.DataAccess.Data;
 using ShopKnjigaGlavni.DataAccess.Repository.IRepository;
 using ShopKnjigaGlavni.Models.Models;
+using ShopKnjigaGlavni.Utility;
 
 namespace ShopKnjigaGlavni.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles =Role.Role_Admin)]
 public class CategoryController : Controller
 {
     //private readonly ApplicationDbContext _context;

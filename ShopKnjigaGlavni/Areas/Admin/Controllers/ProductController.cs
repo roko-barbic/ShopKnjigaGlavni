@@ -1,12 +1,15 @@
 ﻿using Elfie.Serialization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShopKnjigaGlavni.DataAccess.Repository.IRepository;
 using ShopKnjigaGlavni.Models.Models;
 using ShopKnjigaGlavni.Models.ViewModels;
+using ShopKnjigaGlavni.Utility;
 
 namespace ShopKnjigaGlavni.Areas.Admin.Controllers;
 [Area("Admin")]
+[Authorize(Roles = Role.Role_Admin)]
 
 public class ProductController : Controller
 {
