@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopKnjigaGlavni.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using ShopKnjigaGlavni.DataAccess.Data;
 namespace ShopKnjigaGlavni.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424162459_DodajUseruCompany")]
+    partial class DodajUseruCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,18 +308,6 @@ namespace ShopKnjigaGlavni.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Osijek",
-                            Name = "IVS",
-                            PhoneNumber = "0191412412",
-                            PostalCode = "31000",
-                            State = "HRV",
-                            StreetAddress = "Vukovarska"
-                        });
                 });
 
             modelBuilder.Entity("ShopKnjigaGlavni.Models.Models.Product", b =>

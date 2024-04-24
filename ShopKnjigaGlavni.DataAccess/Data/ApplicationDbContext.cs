@@ -15,11 +15,25 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<Company> Companies { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<ApplicationUser> ApplicationsUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Company>().HasData(
+            new
+            {
+                Id = 1,
+                Name = "IVS",
+                State = "HRV",
+                StreetAddress ="Vukovarska",
+                City = "Osijek",
+                PostalCode = "31000",
+                PhoneNumber ="0191412412"
+            }
+           );
 
         modelBuilder.Entity<Product>().HasData(
             new
