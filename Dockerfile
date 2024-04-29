@@ -1,19 +1,27 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 WORKDIR /app
-EXPOSE  85
-EXPOSE 436
+EXPOSE 8080
+EXPOSE 8088
 
-COPY ShopKnjigaGlavni/*.csproj ./ShopKnjigaGlavni/
-COPY ShopKnjigaGlavni.Models/*.csproj ./ShopKnjigaGlavni.Models/
-COPY ShopKnjigaGlavni.DataAccess/*.csproj ./ShopKnjigaGlavni.DataAccess/
-COPY ShopKnjigaGlavni.Utility/*.csproj ./ShopKnjigaGlavni.Utility/
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["ShopKnjigaGlavni/*.csproj", "./ShopKnjigaGlavni/"]
+COPY ["ShopKnjigaGlavni.Models/*.csproj", "./ShopKnjigaGlavni.Models/"]
+COPY ["ShopKnjigaGlavni.DataAccess/*.csproj", "./ShopKnjigaGlavni.DataAccess/"]
+COPY ["ShopKnjigaGlavni.Utility/*.csproj", "./ShopKnjigaGlavni.Utility/"]
 
-RUN for file in $(ls *.csproj); do dotnet restore $file; done
+RUN dotnet restore "ShopKnjigaGlavni/ShopKnjigaGlavni.csproj" 
 
 COPY . ./
-RUN dotnet publish -c Release  -o out
+WORKDIR "/src/ShopKnjigaGlavni"
+RUN dotnet build "ShopKnjigaGlavni.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS final-env
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "ShopKnjigaGlavni.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "ShopKnjigaGlavni.dll" ]
+COPY --from=publish /app/publish .
+ENTRYPOINT [ "dotnet", "ShopKnjigaGlavni.dll" ]

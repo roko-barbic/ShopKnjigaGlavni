@@ -5,34 +5,34 @@ networks:
     driver: bridge
 
 services:
-  shop-knjiga-glavni: 
-    image: docker.io/library/shopknjigaglavni
+  glavni-shop: 
+    image: docker.io/library/prvaverzija
     depends_on:
-      - "app_db2"
-    container_name: shopknjigaglavni-services
+      - "app_db22"
+    container_name: glavnishop-services
     ports:
-      - "8086:85"
+      - "8088:80"
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Server=app_db2;Port=5435;Database=shopKnjigaDBGL;Pooling=true;
-      - ASPNETCORE_URLS=http://+:85
+      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Server=app_db22;Port=5432;Database=shopKnjigaDBGL;Pooling=true;
+      - ASPNETCORE_URLS=http://+:80
     networks:
       - dev
   
-  app_db2:
+  app_db22:
     image: postgres:latest
-    container_name: app_db2
+    container_name: app_db22
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=shopKnjigaDBGL
     ports:
-      - "5436:5435"
+      - "5490:5432"
     restart: always
     volumes:
-      - app_data:/var/postgresql/data
+      - app_data:/var/lib/postgresql/data
     networks:
       - dev
     
