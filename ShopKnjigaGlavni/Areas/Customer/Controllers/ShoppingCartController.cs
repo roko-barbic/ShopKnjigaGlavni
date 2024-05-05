@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopKnjigaGlavni.DataAccess.Repository.IRepository;
 using ShopKnjigaGlavni.Models.Models;
+using ShopKnjigaGlavni.Models.ViewModels;
 using ShopKnjigaGlavni.Utility;
+using System.Security.Claims;
 
 
 namespace ShopKnjigaGlavni.Areas.Customer.Controllers;
@@ -19,65 +21,29 @@ public class ShoppingCartController : Controller
     public IActionResult Index()
     {
         List<ShoppingCart> shoppingList = _unitOfWork.ShoppingCart.GetAll(includeProperties: "Product").ToList();
-        return View(shoppingList);
+        ShoppingCartViewModel shoppingCartView = new ShoppingCartViewModel(shoppingList);
+        return View(shoppingCartView);
     }
-   
-    [HttpPost]
-    public IActionResult AddToCart(Product product)
+
+    public int GetShoppingCartItemCount()
     {
-        List<Category> categoryList = _unitOfWork.Category.GetAll().ToList();
-
-        
-        return View();
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        List <ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(includeProperties: "Product").ToList();
+        int count = 0;
+        foreach (var cart in shoppingCarts)
+        {
+            if(cart.ApplicationUserId == userId)
+            {
+                count += cart.Count;
+            }
+        }
+        return count;
     }
 
-    public IActionResult Edit(int? shoppingCartId)
-    {
-        if (shoppingCartId == null && shoppingCartId == 0)
-        {
-            return NotFound();
-        }
-        ShoppingCart? shoppingCart = _unitOfWork.ShoppingCart.Get(c => c.Id == shoppingCartId);
 
-        if (shoppingCart == null)
-        {
-            return NotFound();
-        }
-        return View(shoppingCart);
-    }
 
-    [HttpPost]
-    public IActionResult Edit(Category category)
-    {
-
-        if (ModelState.IsValid)
-        {
-
-            _unitOfWork.Category.Update(category);
-            _unitOfWork.Save();  //potrebno da je se spremi na bazu
-            TempData["success"] = "Category edited successfully";
-            return RedirectToAction("Index", "Category");
-        }
-
-        return View();
-    }
-    public IActionResult Delete(int? categoryId)
-    {
-        if (categoryId == null && categoryId == 0)
-        {
-            return NotFound();
-        }
-        Category? category = _unitOfWork.Category.Get(c => c.Id == categoryId);
-
-        if (category == null)
-        {
-            return NotFound();
-        }
-        return View(category);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    public IActionResult DeletePOST(int? shoppingCartId)
+    public IActionResult Delete(int? shoppingCartId)
     {
         ShoppingCart? shoppingCart = _unitOfWork.ShoppingCart.Get(c => c.Id == shoppingCartId);
 
@@ -87,8 +53,50 @@ public class ShoppingCartController : Controller
         }
         _unitOfWork.ShoppingCart.Delete(shoppingCart);
         _unitOfWork.Save();
-        TempData["success"] = "Category deleted successfully";
 
-        return RedirectToAction("Index", "Category");
+        return RedirectToAction(nameof(Index));
     }
+    public IActionResult AddOne(int? shoppingCartId)
+    {
+        ShoppingCart? shoppingCart = _unitOfWork.ShoppingCart.Get(c => c.Id == shoppingCartId);
+
+        if (shoppingCart == null)
+        {
+            return NotFound();
+        }
+        shoppingCart.Count++;
+        _unitOfWork.ShoppingCart.Update(shoppingCart);
+        _unitOfWork.Save();
+
+        return RedirectToAction(nameof(Index));
+    }
+    public IActionResult DeleteOne(int? shoppingCartId)
+    {
+        ShoppingCart? shoppingCart = _unitOfWork.ShoppingCart.Get(c => c.Id == shoppingCartId);
+
+        if (shoppingCart == null)
+        {
+            return NotFound();
+        }
+        
+        if(shoppingCart.Count == 1)
+        {
+            _unitOfWork.ShoppingCart.Delete(shoppingCart);
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+
+        }
+        shoppingCart.Count--;
+        _unitOfWork.ShoppingCart.Update(shoppingCart);
+        _unitOfWork.Save();
+
+        return RedirectToAction(nameof(Index));
+    }
+    public IActionResult Summary()
+    {
+        List<ShoppingCart> shoppingList = _unitOfWork.ShoppingCart.GetAll(includeProperties: "Product").ToList();
+        ShoppingCartViewModel shoppingCartView = new ShoppingCartViewModel(shoppingList);
+        return View(shoppingCartView);
+    }
+
 }
